@@ -23,7 +23,7 @@
 </template>
 
 <template name="nowPlaying">
-  <p>Currently playing song list will go here.</p>
+  <h2 class="ui header">Now Playing</h2>
 </template>
 
 <template name="upload">
@@ -38,18 +38,26 @@
 
 <template name="uploading">
   {{#each files}}
-  {{#unless this.isUploaded}}
-  {{> FS.UploadProgressBar semantic=true}}
-  {{/unless}}
+    {{#unless this.isUploaded}}
+      {{> FS.UploadProgressBar semantic=true}}
+    {{/unless}}
   {{/each}}
 </template>
 
 <template name="artists">
-  <p>List of Artists is going here.</p>
+  <h2 class="ui header">Artists</h2>
+  <br/>
+  <div class="ui list">
+  {{#each artists}}
+    <div class="item">
+      <div class="ui basic button" data-tag="{{tag}}">{{name}}</div>
+    </div>
+  {{/each}}
+  </div>
 </template>
 
 <template name="genres">
-  <p>List of Genres is going here.</p>
+  <h2 class="ui header">Genres</h2>
 </template>
 
 <template name="sidemenu">
@@ -67,6 +75,7 @@
       <i class="cloud upload icon green"></i> Upload
     </a>
   </div>
+  <br/><br/>
   <div class="ui tiny buttons">
     <div id="remote" class="ui {{isRemote}} button">
       <i class="keyboard icon"></i>
