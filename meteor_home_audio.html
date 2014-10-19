@@ -1,0 +1,68 @@
+<head>
+  <title>Home Audio</title>
+</head>
+
+<body>
+
+</body>
+
+<template name="applicationTemplate">
+  <div class="ui green menu inverted">
+    <h1 class="item">
+      <i class="large headphones icon inverted green"></i> Meteor Home Audio
+    </h1>
+  </div>
+  <div class="ui grid">
+    <div class="four wide column">
+      {{> sidemenu}}
+    </div>
+    <div class="twelve wide column">
+      {{> yield}}
+    </div>
+  </div>
+</template>
+
+<template name="nowPlaying">
+  <p>Currently playing song list will go here.</p>
+</template>
+
+<template name="upload">
+  <p>This is the page where you upload.</p>
+  <button>Upload</button>
+</template>
+
+<template name="artists">
+  <p>List of Artists is going here.</p>
+</template>
+
+<template name="genres">
+  <p>List of Genres is going here.</p>
+</template>
+
+<template name="sidemenu">
+  <div class="ui vertical green menu">
+    <a class="item {{isActiveNowPlaying}}" href="/">
+      <i class="volume up icon green"></i> Now Playing
+    </a>
+    <a class="item {{isActiveArtists}}" href="/artists">
+      <i class="user icon green"></i> Artists
+    </a>
+    <a class="item {{isActiveGenres}}" href="/genres">
+      <i class="music icon green"></i> Genres
+    </a>
+    <a class="item {{isActiveUpload}}" href="/upload">
+      <i class="cloud upload icon green"></i> Upload
+    </a>
+  </div>
+  <div class="ui tiny buttons">
+    <div id="remote" class="ui {{isRemote}} button">
+      <i class="keyboard icon"></i>
+      Remote
+    </div>
+    <div class="or"></div>
+    <div id="player" class="ui {{isPlayer}} button">
+      <i class="bullhorn icon"></i>
+      Player
+    </div>
+  </div>
+</template>
