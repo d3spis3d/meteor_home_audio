@@ -10,4 +10,6 @@ iron:router
 nooitaf:semantic-ui
 cfs:standard-packages
 cfs:filesystem
+raix:ui-dropped-event
+cfs:ui
 

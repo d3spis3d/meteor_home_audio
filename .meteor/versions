@@ -22,6 +22,7 @@ cfs:reactive-property@0.0.0
 cfs:standard-packages@0.0.2
 cfs:storage-adapter@0.0.0
 cfs:tempstore@0.0.2
+cfs:ui@0.0.0
 cfs:upload-http@0.0.2
 cfs:worker@0.0.0
 check@1.0.2
@@ -57,6 +58,7 @@ nooitaf:semantic-ui@0.19.3
 observe-sequence@1.0.3
 ordered-dict@1.0.1
 raix:eventemitter@0.0.1
+raix:ui-dropped-event@0.0.7
 random@1.0.1
 reactive-dict@1.0.4
 reactive-var@1.0.3

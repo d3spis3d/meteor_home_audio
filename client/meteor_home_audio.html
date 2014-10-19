@@ -27,8 +27,21 @@
 </template>
 
 <template name="upload">
-  <p>This is the page where you upload.</p>
-  <button>Upload</button>
+    <h2 class="ui header">Upload
+    <div class="sub header">Upload files in the format "xx-Artist Name-Album Name-Song Name.filename"</div>
+    </h2><br/>
+  <div id="dropzone" class="ui green inverted segment" style="text-align: center;">
+    Drop Files Here <br/><br/> <i class="add sign icon inverted green large"></i>
+  </div>
+  {{> uploading}}
+</template>
+
+<template name="uploading">
+  {{#each files}}
+  {{#unless this.isUploaded}}
+  {{> FS.UploadProgressBar semantic=true}}
+  {{/unless}}
+  {{/each}}
 </template>
 
 <template name="artists">
