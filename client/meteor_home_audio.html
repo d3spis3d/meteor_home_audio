@@ -35,6 +35,37 @@
 
 <template name="nowPlaying">
   <h2 class="ui header">Now Playing</h2>
+    <div class="ui icon basic small buttons">
+        <div class="ui icon button"><i class="step backward icon green"></i></div>
+        {{#if isPlaying}}
+        <div class="ui icon button Pause"><i class="pause icon green"></i></div>
+        {{else}}
+        <div class="ui icon button Play"><i class="play icon green"></i></div>
+        {{/if}}
+        <div class="ui icon button"><i class="step forward icon green"></i></div>
+        <div class="ui icon button"><i class="shuffle icon green"></i></div>
+    </div>
+    {{#if isRemote}}
+    <div class="ui list">
+        {{#each songs}}
+        <div class="item">
+            <div class="ui basic button Playing" data-number="{{number}}">
+                {{title}}<i class="right floated remove icon green"></i>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+    {{else}}
+    <div class="ui list">
+        {{#each songs}}
+        <div class="item">
+            <div class="ui basic button Playing" data-number="{{number}}">
+                {{title}}<i class="right floated remove icon green"></i><audio src="{{url}}"></audio>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+    {{/if}}
 </template>
 
 <template name="upload">
@@ -145,7 +176,7 @@
     <div class="ui list">
         {{#each songs}}
             <div class="item">
-                <div class="ui basic button Playing" data-track="{{_id}}" data-number="{{number}}">
+                <div class="ui basic button Playing" data-number="{{number}}">
                     {{title}}<i class="right floated remove icon green"></i>
                 </div>
             </div>

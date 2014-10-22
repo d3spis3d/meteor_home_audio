@@ -13,10 +13,7 @@ UI.registerHelper('isPlayer', function() {
 });
 
 UI.registerHelper('sideNowPlaying', function() {
-  if (Session.get('currentPage') === 'nowPlaying' || Session.get('client') === 'player') {
-    return false;
-  }
-  return true;
+  return Session.get('currentPage') != 'nowPlaying' || Session.get('client') != 'player';
 });
 
 UI.registerHelper('isPlaying', function() {
@@ -112,11 +109,10 @@ Template.songs.events({
   'click .button.Song': function(e) {
     var songID = $(e.target).data('id');
     var song = Files.findOne({_id: songID});
-    console.log(song.metadata);
     var nowPlayingCount = NowPlaying.find({}).count();
     var track = {
       title: song.metadata.song,
-      url: song.url,
+      url: song.url(),
       number: nowPlayingCount + 1
     };
     NowPlaying.insert(track);
@@ -131,15 +127,14 @@ Template.sidePlaying.helpers({
 
 Template.sidePlaying.events({
   'click .button.Playing': function(e) {
-    var trackID = $(e.target).data('track');
     var trackNo = $(e.target).data('number');
-    NowPlaying.remove({_id: trackID});
     Meteor.call('updateNowPlaying', trackNo);
   },
   'click .button.Play': function() {
-    console.log('emitting stream');
-    controlStream.emit('play');
-    Session.set('playing', true);
+    if (NowPlaying.find({}).count()) {
+      controlStream.emit('play');
+      Session.set('playing', true);
+    }
   },
   'click .button.Pause': function() {
     console.log('emitting pause stream');
@@ -147,4 +142,70 @@ Template.sidePlaying.events({
     Session.set('playing', false);
   }
 });
+
+Template.nowPlaying.helpers({
+  songs: function() {
+    return NowPlaying.find({}, {number: 1});
+  }
+});
+
+// functions for nowPlaying events ------
+
+var getAudioElement = function() {
+  return $('div.button').filter('[data-number=1]').find('audio').get(0);
+};
+
+var isPlayer = function() {
+  console.log(Session.get('client'));
+  return Session.get('client') === 'player';
+};
+
+Tracker.autorun(function() {
+  if (Session.equals('nextsong', true)) {
+    Session.set('nextsong', false);
+    if (NowPlaying.find({}).count()) {
+      getAudioElement().play();
+    } else {
+      Session.set('playing', false);
+      controlStream.emit('pause');
+    }
+  }
+});
+
+// -------------------------------------
+
+Template.nowPlaying.events({
+  'click .button.Playing': function(e) {
+    var trackNo = $(e.target).data('number');
+    Meteor.call('updateNowPlaying', trackNo);
+  },
+  'click .button.Play': function() {
+    if (NowPlaying.find({}).count()) {
+      controlStream.emit('play');
+      Session.set('playing', true);
+      if (isPlayer()) {
+        getAudioElement().play();
+      }
+    }
+  },
+  'click .button.Pause': function() {
+    console.log('emitting pause stream');
+    controlStream.emit('pause');
+    Session.set('playing', false);
+    if (isPlayer()) {
+      getAudioElement().pause();
+    }
+  },
+  'ended audio': function() {
+    console.log('song ended');
+    Meteor.call('updateNowPlaying', 1, function(error, result) {
+      if (error) {
+        console.log('error on server');
+      } else if (result) {
+        Session.set('nextsong', true);
+      }
+    });
+  }
+});
+
 
