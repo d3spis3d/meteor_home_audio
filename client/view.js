@@ -172,6 +172,22 @@ Tracker.autorun(function() {
   }
 });
 
+controlStream.on('play', function() {
+  console.log('heard play');
+  Session.set('playing', true);
+  if (Session.equals('client', 'player') && Session.equals('currentPage', 'nowPlaying')) {
+    getAudioElement().play();
+  }
+});
+
+controlStream.on('pause', function() {
+  console.log('heard pause');
+  Session.set('playing', false);
+  if (Session.equals('client', 'player') && Session.equals('currentPage', 'nowPlaying')) {
+    getAudioElement().pause();
+  }
+});
+
 // -------------------------------------
 
 Template.nowPlaying.events({
