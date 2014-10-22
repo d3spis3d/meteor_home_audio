@@ -27,4 +27,27 @@ Router.map(function() {
       Session.set('currentPage', 'genres');
     }
   });
+
+  this.route('songs', {
+    path: '/artists/:tag/:album',
+    data: function() {
+      var artist = Artists.findOne({tag: this.params.tag});
+      var album = Albums.findOne({artist: this.params.tag, tag: this.params.album});
+      return {
+        artist: artist,
+        album: album,
+        songs: Files.find({'metadata.artist': artist.name, 'metadata.album': album.title}, {'metadata.number': 1})
+      };
+    }
+  });
+
+  this.route('albums', {
+    path: '/artists/:tag',
+    data: function() {
+      return {
+        artist: Artists.findOne({tag: this.params.tag}),
+        albums: Albums.find({artist: this.params.tag}, {title: 1})
+      };
+    }
+  });
 });

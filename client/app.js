@@ -1,4 +1,3 @@
-Session.setDefault('counter', 0);
 Session.setDefault('client', 'remote');
-
+Session.setDefault('playing', false);
 

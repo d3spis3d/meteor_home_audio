@@ -4,7 +4,6 @@
 # but you can also edit it by hand.
 
 meteor-platform
-autopublish
 insecure
 iron:router
 nooitaf:semantic-ui
@@ -12,4 +11,4 @@ cfs:standard-packages
 cfs:filesystem
 raix:ui-dropped-event
 cfs:ui
-
+lepozepo:streams
