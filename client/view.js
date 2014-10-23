@@ -176,8 +176,11 @@ controlStream.on('play', function() {
   console.log('heard play');
   Session.set('playing', true);
   if (Session.equals('client', 'player') && Session.equals('currentPage', 'nowPlaying')) {
-    var error = getAudioElement().play();
-    controlStream.emit('error', error);
+    try {
+      getAudioElement().play();
+    } catch (ex) {
+      controlStream.emit('error', ex);
+    }
   }
 });
 
