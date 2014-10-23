@@ -178,6 +178,7 @@ controlStream.on('play', function() {
   if (Session.equals('client', 'player') && Session.equals('currentPage', 'nowPlaying')) {
     try {
       getAudioElement().play();
+      controlStream.emit('error', 'audio elem: ' + getAudioElement());
     } catch (ex) {
       controlStream.emit('error', ex);
     }
