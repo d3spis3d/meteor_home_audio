@@ -152,7 +152,7 @@ Template.nowPlaying.helpers({
 // functions for nowPlaying events ------
 
 var getAudioElement = function() {
-  return $('div.button').filter('[data-number=1]').find('audio').get(0);
+  return $('div.button').filter('[data-number=1]').find('audio')[0];
 };
 
 var isPlayer = function() {
@@ -176,7 +176,8 @@ controlStream.on('play', function() {
   console.log('heard play');
   Session.set('playing', true);
   if (Session.equals('client', 'player') && Session.equals('currentPage', 'nowPlaying')) {
-    getAudioElement().play();
+    var error = getAudioElement().play();
+    controlStream.emit('error', error);
   }
 });
 
@@ -186,6 +187,10 @@ controlStream.on('pause', function() {
   if (Session.equals('client', 'player') && Session.equals('currentPage', 'nowPlaying')) {
     getAudioElement().pause();
   }
+});
+
+controlStream.on('error', function(message) {
+  console.log(message);
 });
 
 // -------------------------------------
