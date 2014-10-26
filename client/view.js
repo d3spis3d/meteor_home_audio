@@ -13,7 +13,7 @@ UI.registerHelper('isPlayer', function() {
 });
 
 UI.registerHelper('sideNowPlaying', function() {
-  return Session.get('currentPage') != 'nowPlaying' || Session.get('client') != 'player';
+  return Session.get('currentPage') != 'nowPlaying';
 });
 
 UI.registerHelper('isPlaying', function() {
@@ -61,6 +61,9 @@ Template.upload.events({
     console.log('files dropped');
     FS.Utility.eachFile(event, function(file) {
       var newFile = new FS.File(file);
+      if (newFile.type() == 'audio/x-m4a') {
+        newFile.type('audio/mp3');
+      }
       var meta = newFile.name().split('.')[0].split('-');
       newFile.metadata = {artist: meta[1], number: meta[0], album: meta[2], song: meta[3]}
       Files.insert(newFile, function (err, fileObj) {

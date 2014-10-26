@@ -1,5 +1,17 @@
 Files = new FS.Collection("files", {
-  stores: [new FS.Store.FileSystem("files", {path: '~/public/audio'})]
+  stores: [new FS.Store.FileSystem("files",
+    {
+      path: '~/public/audio',
+      beforeWrite: function(fileObj) {
+        return {
+          extension: 'mp3',
+          fileType: 'audio/mp3'
+        };
+      },
+      transformWrite: function(fileObj, readStream, writeStream) {
+        ffmpeg(readStream).audioCodec('libmp3lame').format('mp3').pipe(writeStream);
+      }
+    })]
 });
 
 Artists = new Mongo.Collection('artists');

@@ -12,3 +12,5 @@ cfs:filesystem
 raix:ui-dropped-event
 cfs:ui
 lepozepo:streams
+fluent-ffmpeg
+
