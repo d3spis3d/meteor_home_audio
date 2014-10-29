@@ -205,7 +205,15 @@ controlStream.on('error', function(message) {
 Template.nowPlaying.events({
   'click .button.Playing': function(e) {
     var trackNo = $(e.target).data('number');
-    Meteor.call('updateNowPlaying', trackNo);
+    Meteor.call('updateNowPlaying', trackNo, function(error, result) {
+      if (error) {
+        console.log(error);
+      } else if (result) {
+        if (trackNo === 1) {
+          Session.set('nextsong', true);
+        }
+      }
+    });
   },
   'click .button.Play': function() {
     if (NowPlaying.find({}).count()) {
