@@ -24,31 +24,32 @@ UI.registerHelper('isPaused', function() {
   return Session.get('paused');
 });
 
-Template.sideMenu.helpers({
-  isActiveNowPlaying: function() {
-    if (Session.get('currentPage') === 'nowPlaying') {
-      return 'active'
-    }
-    return '';
-  },
-  isActiveArtists: function() {
-    if (Session.get('currentPage') === 'artists') {
-      return 'active'
-    }
-    return '';
-  },
-  isActiveGenres: function() {
-    if (Session.get('currentPage') === 'genres') {
-      return 'active'
-    }
-    return '';
-  },
-  isActiveUpload: function() {
-    if (Session.get('currentPage') === 'upload') {
-      return 'active'
-    }
-    return '';
+UI.registerHelper('isActiveNowPlaying', function() {
+  if (Session.equals('currentPage', 'nowPlaying')) {
+    return 'active'
   }
+  return '';
+});
+
+UI.registerHelper('isActiveArtists', function() {
+  if (Session.equals('currentPage', 'artists')) {
+    return 'active'
+  }
+  return '';
+});
+
+UI.registerHelper('isActiveGenres', function() {
+  if (Session.equals('currentPage', 'genres')) {
+    return 'active'
+  }
+  return '';
+});
+
+UI.registerHelper('isActiveUpload', function() {
+  if (Session.equals('currentPage', 'upload')) {
+    return 'active'
+  }
+  return '';
 });
 
 Template.sideMenu.events({

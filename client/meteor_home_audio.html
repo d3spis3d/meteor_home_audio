@@ -13,24 +13,66 @@
     </h1>
   </div>
   <div class="ui grid">
-    <div class="three wide column">
-      {{> sideMenu}}
-    </div>
-    {{#if sideNowPlaying}}
-    <div class="thirteen wide column">
-      <div class="ui divided very relaxed grid">
-          <div class="ten wide column">
-              {{> yield}}
-          </div>
-          <div class="center aligned six wide column">
-              {{> sidePlaying}}
-          </div>
-      </div>
-    </div>
-    {{else}}
-        <div class="center aligned thirteen wide column">
-            {{> yield}}
+    {{#if screensize_large}}
+        <div class="three wide column">
+          {{> sideMenu}}
         </div>
+        {{#if sideNowPlaying}}
+        <div class="thirteen wide column">
+          <div class="ui divided very relaxed grid">
+              <div class="ten wide column">
+                  {{> yield}}
+              </div>
+              <div class="center aligned six wide column">
+                  {{> sidePlaying}}
+              </div>
+          </div>
+        </div>
+        {{else}}
+            <div class="center aligned thirteen wide column">
+                {{> yield}}
+            </div>
+        {{/if}}
+    {{else}}
+        {{#if screensize_medium}}
+            {{> mobileMenu}}
+            {{#if sideNowPlaying}}
+                <div class="sixteen wide column">
+                    <div class="ui divided grid">
+                        <div class="ten wide column">
+                            {{> yield}}
+                        </div>
+                        <div class="center aligned six wide column">
+                            {{> sidePlaying}}
+                        </div>
+                    </div>
+                </div>
+            {{else}}
+                <div class="center aligned sixteen wide column">
+                    {{> yield}}
+                </div>
+            {{/if}}
+        {{else}}
+            {{#if screensize_small}}
+                {{> mobileMenu}}
+                {{#if sideNowPlaying}}
+                        <div class="sixteen wide column">
+                            <div class="ui divided grid">
+                                <div class="ten wide column">
+                                    {{> yield}}
+                                </div>
+                                <div class="center aligned six wide column">
+                                    {{> sidePlaying}}
+                                </div>
+                            </div>
+                        </div>
+                {{else}}
+                        <div class="center aligned sixteen wide column">
+                            {{> yield}}
+                        </div>
+                {{/if}}
+            {{/if}}
+        {{/if}}
     {{/if}}
   </div>
 </template>
@@ -197,5 +239,17 @@
                 </div>
             </div>
         {{/each}}
+    </div>
+</template>
+
+<template name="mobileMenu">
+    <div class="ui green menu">
+        <a class="{{isActiveNowPlaying}} item" href="/"><i class="volume up icon green"></i>Now Playing</a>
+        <a class="{{isActiveArtists}} item" href="/artists"><i class="user icon green"></i>Artists</a>
+        <a class="{{isActiveGenres}} item" href="/genres"><i class="music icon green"></i>Genres</a>
+        <a class="{{isActiveUpload}} item" href="/upload"><i class="cloud upload icon green"></i>Upload</a>
+        <div class="ui right menu">
+            <div class="ui button black">Remote</div>
+        </div>
     </div>
 </template>

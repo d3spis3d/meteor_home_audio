@@ -25,12 +25,14 @@ cfs:ui@0.0.0
 cfs:upload-http@0.0.2
 cfs:worker@0.0.0
 check@1.0.2
+coffeescript@1.0.4
 ctl-helper@1.0.4
 ctl@1.0.2
 ddp@1.0.10
 deps@1.0.5
 ejson@1.0.4
 fastclick@1.0.1
+ficshelf:media-query@1.0.6
 fluent-ffmpeg@0.0.0
 follower-livedata@1.0.2
 geojson-utils@1.0.1
