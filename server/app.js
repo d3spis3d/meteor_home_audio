@@ -6,5 +6,24 @@ Meteor.methods({
       NowPlaying.update({_id: track._id}, {$inc: {number: -1}});
     });
     return true;
+  },
+  updateCurrentSong: function(name, url) {
+    var current = CurrentSong.findOne();
+    if (current) {
+      CurrentSong.update({_id: current._id}, {$set: {title: name, url: url}});
+    } else {
+      console.log('inserting');
+      var song = {title: name, url: url};
+      CurrentSong.insert(song);
+    }
+    return true;
+  },
+  shufflePlaying: function(array) {
+    var tracks = NowPlaying.find({});
+    tracks.forEach(function(track) {
+      var newNumber = array.indexOf(track.id) + 1;
+      NowPlaying.update({_id: track._id}, {$set: {number: newNumber}});
+    });
+    return true;
   }
 });

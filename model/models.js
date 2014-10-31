@@ -20,6 +20,8 @@ Albums = new Mongo.Collection('albums');
 
 NowPlaying = new Mongo.Collection('nowplaying');
 
+CurrentSong = new Mongo.Collection('currentsong');
+
 ControlState = new Mongo.Collection('state');
 
 Meteor.startup(function() {
@@ -47,6 +49,9 @@ Meteor.startup(function() {
     Meteor.publish('nowplaying', function() {
       return NowPlaying.find({});
     });
+    Meteor.publish('currentsong', function() {
+      return CurrentSong.find({});
+    });
   }
 });
 
@@ -61,4 +66,5 @@ if (Meteor.isClient) {
   Meteor.subscribe('albums');
   Meteor.subscribe('files');
   Meteor.subscribe('nowplaying');
+  Meteor.subscribe('currentsong');
 }
