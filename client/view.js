@@ -250,6 +250,7 @@ controlStream.on('play', function() {
   Session.set('playing', true);
   Session.set('paused', false);
   if (Session.equals('client', 'player') && Session.equals('currentPage', 'nowPlaying')) {
+    addProgressEventhandler();
     playSong();
   }
 });
@@ -284,6 +285,7 @@ Template.nowPlaying.events({
       Session.set('playing', true);
       Session.set('paused', false);
       if (isPlayer()) {
+        addProgressEventhandler();
         playSong();
       }
     }
@@ -327,4 +329,30 @@ Template.nowPlaying.events({
   }
 });
 
+// ---- Functions for controlling progress bar -------
+var addProgressEventhandler = function() {
+  var audio = document.getElementById('audio');
+  audio.addEventListener('timeupdate', updateProgress, false);
+};
+
+var updateProgress = function() {
+  var audio = document.getElementById('audio');
+  var value = 0;
+  if (audio.currentTime > 0) {
+    value = ((audio.currentTime/audio.duration) * 100);
+  }
+  controlStream.emit('time', value);
+  $('.ui.top.attached.green.progress').find('.bar').css('width', value + '%');
+  $('.ui.bottom.attached.green.progress').find('.bar').css('width', value + '%');
+};
+
+var updateBar = function(value) {
+  $('.ui.top.attached.green.progress').find('.bar').css('width', value + '%');
+  $('.ui.bottom.attached.green.progress').find('.bar').css('width', value + '%');
+};
+
+controlStream.on('time', function(value) {
+  updateBar(value);
+});
+// ---------------------------------------------------------
 

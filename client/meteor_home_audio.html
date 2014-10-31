@@ -13,11 +13,11 @@
     </h1>
   </div>
   <div class="ui grid">
-    <div class="four wide column">
+    <div class="three wide column">
       {{> sideMenu}}
     </div>
-    <div class="twelve wide column">
     {{#if sideNowPlaying}}
+    <div class="thirteen wide column">
       <div class="ui divided very relaxed grid">
           <div class="ten wide column">
               {{> yield}}
@@ -26,29 +26,39 @@
               {{> sidePlaying}}
           </div>
       </div>
-    {{else}}
-      {{> yield}}
-    {{/if}}
     </div>
+    {{else}}
+        <div class="center aligned thirteen wide column">
+            {{> yield}}
+        </div>
+    {{/if}}
   </div>
 </template>
 
 <template name="nowPlaying">
   <h2 class="ui header">Now Playing</h2>
-    <h3 class="ui green header PlayingSong">{{currentSong.title}}</h3>
-    {{#if isPlayer}}
-    <audio id="audio" src="{{currentSong.url}}"></audio>
-    {{/if}}
-    <div class="ui icon basic small buttons">
-    <div class="ui icon button Back"><i class="step backward icon green"></i></div>
-    {{#if isPlaying}}
-    <div class="ui icon button Pause"><i class="pause icon green"></i></div>
-    {{else}}
-    <div class="ui icon button Play"><i class="play icon green"></i></div>
-    {{/if}}
-    <div class="ui icon button Next"><i class="step forward icon green"></i></div>
-    <div class="ui icon button Shuffle"><i class="shuffle icon green"></i></div>
+    <div class="ui top attached green progress">
+        <div class="bar" style="width: 0%;"></div>
     </div>
+    <div class="ui attached segment">
+        <h3 class="ui green header PlayingSong">{{currentSong.title}}</h3>
+    </div>
+    <div class="ui bottom attached green progress" style="display: block;">
+        <div class="bar" style="width: 0%;"></div>
+    </div>
+    <div class="ui icon basic small buttons padTop">
+        <div class="ui icon button Back"><i class="step backward icon green"></i></div>
+        {{#if isPlaying}}
+            <div class="ui icon button Pause"><i class="pause icon green"></i></div>
+        {{else}}
+            <div class="ui icon button Play"><i class="play icon green"></i></div>
+        {{/if}}
+        <div class="ui icon button Next"><i class="step forward icon green"></i></div>
+        <div class="ui icon button Shuffle"><i class="shuffle icon green"></i></div>
+    </div>
+    {{#if isPlayer}}
+        <audio id="audio" src="{{currentSong.url}}"></audio>
+    {{/if}}
     {{#if isRemote}}
     <div class="ui list">
         {{#each songs}}
@@ -155,12 +165,12 @@
   <br/><br/>
   <div class="ui tiny buttons">
     <div id="remote" class="ui {{isRemote}} button">
-      <i class="keyboard icon"></i>
+      <!--<i class="keyboard icon"></i>-->
       Remote
     </div>
     <div class="or"></div>
     <div id="player" class="ui {{isPlayer}} button">
-      <i class="bullhorn icon"></i>
+      <!--<i class="bullhorn icon"></i>-->
       Player
     </div>
   </div>
