@@ -113,18 +113,29 @@ Template.albums.events({
   }
 });
 
+var addToNowPlaying = function(songID) {
+  var song = Files.findOne({_id: songID});
+  var nowPlayingCount = NowPlaying.find({}).count();
+  var track = {
+    id: song._id,
+    title: song.metadata.song,
+    url: song.url(),
+    number: nowPlayingCount + 1
+  };
+  NowPlaying.insert(track);
+};
+
 Template.songs.events({
   'click .button.Song': function(e) {
     var songID = $(e.target).data('id');
-    var song = Files.findOne({_id: songID});
-    var nowPlayingCount = NowPlaying.find({}).count();
-    var track = {
-      id: song._id,
-      title: song.metadata.song,
-      url: song.url(),
-      number: nowPlayingCount + 1
-    };
-    NowPlaying.insert(track);
+    addToNowPlaying(songID);
+  },
+  'click .button.All': function() {
+    $('.ui.list').find('.button.Song').each(function() {
+      var id = $(this).data('id');
+      console.log(id);
+      addToNowPlaying(id);
+    });
   }
 });
 
@@ -150,6 +161,15 @@ Template.sidePlaying.events({
     controlStream.emit('pause');
     Session.set('paused', true);
     Session.set('playing', false);
+  },
+  'click .button.Back': function() {
+    controlStream.emit('back');
+  },
+  'click .button.Next': function() {
+    controlStream.emit('next');
+  },
+  'click .button.Shuffle': function() {
+    shuffleNowPlaying();
   }
 });
 
@@ -170,7 +190,7 @@ Template.nowPlaying.helpers({
   }
 });
 
-// functions for nowPlaying events ------
+// ---------- functions for nowPlaying events ---------
 
 var getAudioElement = function() {
   return $('#audio')[0];
@@ -193,7 +213,9 @@ var updateCurrentSong = function() {
     if (error) {
       console.log(error);
     } else {
-      triggerPlay();
+      if (Session.equals('playing', true)) {
+        triggerPlay();
+      }
     }
   });
   Meteor.call('updateNowPlaying', 1);
@@ -228,23 +250,31 @@ var shuffleNowPlaying = function() {
   now.forEach(function(track) {
     nowArray.push(track.id);
   });
-  console.log(nowArray);
   shuffle(nowArray);
-  console.log(nowArray);
-  Meteor.call('shufflePlaying', nowArray, function(error, results) {
-    console.log(error);
-    console.log(results);
-    var tracks = NowPlaying.find({});
-    tracks.forEach(function(track) {
-      console.log(track.title);
-      console.log(track.number);
-    });
-  });
+  Meteor.call('shufflePlaying', nowArray);
 };
 
 var isPlayer = function() {
   console.log(Session.get('client'));
   return Session.get('client') === 'player';
+};
+
+var backSong = function() {
+  getAudioElement().currentTime = 0;
+  if(Session.equals('playing', false)) {
+    getAudioElement().pause();
+  }
+};
+
+var checkNextSong = function() {
+  if(NowPlaying.find({}).count()) {
+    nextSong();
+  } else {
+    Session.set('playing', false);
+    controlStream.emit('stop');
+    var old = CurrentSong.findOne();
+    CurrentSong.remove({_id: old._id});
+  }
 };
 
 controlStream.on('play', function() {
@@ -269,8 +299,16 @@ controlStream.on('stop', function() {
   Session.set('playing', false);
 });
 
-controlStream.on('error', function(message) {
-  console.log(message);
+controlStream.on('next', function() {
+  if (isPlayer()) {
+    checkNextSong();
+  }
+});
+
+controlStream.on('back', function() {
+  if (isPlayer()) {
+    backSong();
+  }
 });
 
 // -------------------------------------
@@ -303,19 +341,17 @@ Template.nowPlaying.events({
     shuffleNowPlaying();
   },
   'click .button.Next': function() {
-    if (NowPlaying.find({}).count()) {
-      nextSong();
+    if (isPlayer()) {
+      checkNextSong();
     } else {
-      Session.set('playing', false);
-      controlStream.emit('stop');
-      var old = CurrentSong.findOne();
-      CurrentSong.remove({_id: old._id});
+      controlStream.emit('next');
     }
   },
   'click .button.Back': function() {
-    getAudioElement().currentTime = 0;
-    if (Session.equals('playing', false)) {
-      getAudioElement().pause();
+    if (isPlayer()) {
+      backSong();
+    } else {
+      controlStream.emit('back');
     }
   },
   'ended audio': function() {
