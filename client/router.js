@@ -7,6 +7,14 @@ Router.map(function() {
     path: '/',
     onRun: function() {
       Session.set('currentPage', 'nowPlaying');
+    },
+    action: function() {
+      console.log('session size: ', Session.get('device-screensize'));
+      if (Session.equals('device-screensize', 'small') || Session.equals('device-screensize', 'medium')) {
+        this.render('mobileNowPlaying');
+      } else {
+        this.render();
+      }
     }
   });
 

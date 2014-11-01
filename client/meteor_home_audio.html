@@ -7,13 +7,13 @@
 </body>
 
 <template name="applicationTemplate">
-  <div class="ui green menu inverted">
-    <h1 class="item">
-      <i class="large headphones icon inverted green"></i> Meteor Home Audio
-    </h1>
-  </div>
-  <div class="ui grid">
     {{#if screensize_large}}
+        <div class="ui green menu inverted">
+            <h1 class="item">
+                <i class="large headphones icon inverted green"></i> Meteor Home Audio
+            </h1>
+        </div>
+        <div class="ui grid">
         <div class="three wide column">
           {{> sideMenu}}
         </div>
@@ -33,8 +33,15 @@
                 {{> yield}}
             </div>
         {{/if}}
+        </div>
     {{else}}
         {{#if screensize_medium}}
+            <div class="ui green menu inverted">
+                <div class="item">
+                    <h1><i class="large headphones icon inverted green"></i> Meteor Home Audio</h1>
+                </div>
+            </div>
+            <div class="ui grid">
             {{> mobileMenu}}
             {{#if sideNowPlaying}}
                 <div class="sixteen wide column">
@@ -52,8 +59,15 @@
                     {{> yield}}
                 </div>
             {{/if}}
+            </div>
         {{else}}
             {{#if screensize_small}}
+                <div class="ui green menu inverted">
+                    <h1 class="item">
+                        <i class="large headphones icon inverted green"></i> Meteor Home Audio
+                    </h1>
+                </div>
+                <div class="ui grid">
                 {{> mobileMenu}}
                 {{#if sideNowPlaying}}
                         <div class="sixteen wide column">
@@ -71,10 +85,10 @@
                             {{> yield}}
                         </div>
                 {{/if}}
+                </div>
             {{/if}}
         {{/if}}
     {{/if}}
-  </div>
 </template>
 
 <template name="nowPlaying">
@@ -244,13 +258,44 @@
 </template>
 
 <template name="mobileMenu">
-    <div class="ui green menu">
-        <a class="{{isActiveNowPlaying}} item" href="/"><i class="volume up icon green"></i>Now Playing</a>
-        <a class="{{isActiveArtists}} item" href="/artists"><i class="user icon green"></i>Artists</a>
-        <a class="{{isActiveGenres}} item" href="/genres"><i class="music icon green"></i>Genres</a>
-        <a class="{{isActiveUpload}} item" href="/upload"><i class="cloud upload icon green"></i>Upload</a>
-        <div class="ui right menu">
-            <div class="ui button black">Remote</div>
-        </div>
+    <div class="ui green large menu">
+        <div class="ui basic massive button"><a class="{{isActiveNowPlaying}} item" href="/"><h4><i class="volume up icon green big"></i>Now Playing</h4></a></div>
+        <div class="ui basic massive button"><a class="{{isActiveArtists}} item" href="/artists"><h4><i class="user icon green big"></i>Artists</h4></a></div>
+        <div class="ui basic massive button"><a class="{{isActiveGenres}} item" href="/genres"><h4><i class="music icon green big"></i>Genres</h4></a></div>
+    </div>
+</template>
+
+<template name="mobileNowPlaying">
+    <h1 class="ui header">Now Playing</h1>
+    <div class="ui top attached green progress">
+        <div class="bar" style="width: 0%;"></div>
+    </div>
+    <div class="ui attached segment">
+        <h1 class="ui green header PlayingSong">{{currentSong.title}}</h1>
+    </div>
+    <div class="ui bottom attached green progress" style="display: block;">
+        <div class="bar" style="width: 0%;"></div>
+    </div>
+    <div class="4 ui icon basic fluid massive buttons padTop">
+        <div class="ui icon button Back"><i class="step backward icon big green"></i></div>
+        {{#if isPlaying}}
+            <div class="ui icon button Pause"><i class="pause icon big green"></i></div>
+        {{else}}
+            <div class="ui icon button Play"><i class="play icon big green"></i></div>
+        {{/if}}
+        <div class="ui icon button Next"><i class="step forward icon big green"></i></div>
+        <div class="ui icon button Shuffle"><i class="shuffle icon big green"></i></div>
+    </div>
+    {{#if isPlayer}}
+        <audio id="audio" src="{{currentSong.url}}"></audio>
+    {{/if}}
+    <div class="ui list">
+        {{#each songs}}
+            <div class="item">
+                <div class="ui basic button massive Playing" data-number="{{number}}">
+                    <p>{{title}}<i class="right floated remove icon green"></i></p>
+                </div>
+            </div>
+        {{/each}}
     </div>
 </template>

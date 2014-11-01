@@ -297,6 +297,7 @@ controlStream.on('pause', function() {
 controlStream.on('stop', function() {
   Session.set('paused', false);
   Session.set('playing', false);
+  updateBar(0);
 });
 
 controlStream.on('next', function() {
@@ -362,6 +363,7 @@ Template.nowPlaying.events({
       controlStream.emit('stop');
       var old = CurrentSong.findOne();
       CurrentSong.remove({_id: old._id});
+      updateBar(0);
     }
   }
 });
@@ -393,3 +395,19 @@ controlStream.on('time', function(value) {
 });
 // ---------------------------------------------------------
 
+Template.mobileNowPlaying.helpers({
+
+  songs: function() {
+    return NowPlaying.find({}, {sort: {number: 1}});
+  },
+  currentSong: function() {
+    var song = CurrentSong.findOne();
+    if (!song) {
+      song = {
+        title: '',
+        url: ''
+      };
+    }
+    return song;
+  }
+});
