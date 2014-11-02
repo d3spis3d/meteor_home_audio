@@ -5,12 +5,12 @@ Router.configure({
 Router.map(function() {
   this.route('nowPlaying', {
     path: '/',
-    onRun: function() {
+    onAfterAction: function() {
       Session.set('currentPage', 'nowPlaying');
     },
     action: function() {
-      console.log('session size: ', Session.get('device-screensize'));
       if (Session.equals('device-screensize', 'small') || Session.equals('device-screensize', 'medium')) {
+        this.layout('mobileApplicationTemplate');
         this.render('mobileNowPlaying');
       } else {
         this.render();
@@ -19,20 +19,25 @@ Router.map(function() {
   });
 
   this.route('upload', {
-    onRun: function() {
+    onAfterAction: function() {
       Session.set('currentPage', 'upload');
-    }
-  });
-
-  this.route('artists', {
-    onRun: function() {
-      Session.set('currentPage', 'artists');
+    },
+    action: function() {
+      this.render();
     }
   });
 
   this.route('genres', {
-    onRun: function() {
+    onAfterAction: function() {
       Session.set('currentPage', 'genres');
+    },
+    action: function() {
+      if (Session.equals('device-screensize', 'small') || Session.equals('device-screensize', 'medium')) {
+        this.layout('mobileApplicationTemplate');
+        this.render('mobileGenres');
+      } else {
+        this.render();
+      }
     }
   });
 
@@ -46,6 +51,14 @@ Router.map(function() {
         album: album,
         songs: Files.find({'metadata.artist': artist.name, 'metadata.album': album.title}, {'metadata.number': 1})
       };
+    },
+    action: function() {
+      if (Session.equals('device-screensize', 'small') || Session.equals('device-screensize', 'medium')) {
+        this.layout('mobileApplicationTemplate');
+        this.render('mobileSongs');
+      } else {
+        this.render();
+      }
     }
   });
 
@@ -56,6 +69,28 @@ Router.map(function() {
         artist: Artists.findOne({tag: this.params.tag}),
         albums: Albums.find({artist: this.params.tag}, {title: 1})
       };
+    },
+    action: function() {
+      if (Session.equals('device-screensize', 'small') || Session.equals('device-screensize', 'medium')) {
+        this.layout('mobileApplicationTemplate');
+        this.render('mobileAlbums');
+      } else {
+        this.render();
+      }
+    }
+  });
+
+  this.route('artists', {
+    onAfterAction: function() {
+      Session.set('currentPage', 'artists');
+    },
+    action: function() {
+      if (Session.equals('device-screensize', 'small') || Session.equals('device-screensize', 'medium')) {
+        this.layout('mobileApplicationTemplate');
+        this.render('mobileArtists');
+      } else {
+        this.render();
+      }
     }
   });
 });

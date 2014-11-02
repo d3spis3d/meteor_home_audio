@@ -113,7 +113,7 @@ Template.albums.events({
   }
 });
 
-var addToNowPlaying = function(songID) {
+addToNowPlaying = function(songID) {
   var song = Files.findOne({_id: songID});
   var nowPlayingCount = NowPlaying.find({}).count();
   var track = {
@@ -141,7 +141,7 @@ Template.songs.events({
 
 Template.sidePlaying.helpers({
   songs: function() {
-    return NowPlaying.find({}, {number: 1});
+    return NowPlaying.find({}, {sort: {number: 1}});
   }
 });
 
@@ -192,22 +192,22 @@ Template.nowPlaying.helpers({
 
 // ---------- functions for nowPlaying events ---------
 
-var getAudioElement = function() {
+getAudioElement = function() {
   return $('#audio')[0];
 };
 
-var playingSongExists = function() {
+playingSongExists = function() {
   return CurrentSong.find({}).count();
 };
 
-var triggerPlay = function() {
+triggerPlay = function() {
   //getAudioElement().play();
   getAudioElement().oncanplay = function() {
     getAudioElement().play()
   };
 };
 
-var updateCurrentSong = function() {
+updateCurrentSong = function() {
   var song = NowPlaying.findOne({number: 1});
   Meteor.call('updateCurrentSong', song.title, song.url, function(error, result) {
     if (error) {
@@ -221,12 +221,12 @@ var updateCurrentSong = function() {
   Meteor.call('updateNowPlaying', 1);
 };
 
-var nextSong = function() {
+nextSong = function() {
   getAudioElement().pause();
   updateCurrentSong();
 };
 
-var playSong = function() {
+playSong = function() {
   if (playingSongExists()) {
     getAudioElement().play();
   } else {
@@ -234,7 +234,7 @@ var playSong = function() {
   }
 };
 
-var shuffle = function(array) {
+shuffle = function(array) {
   for (var i = array.length - 1; i > 0; i--) {
     var j = Math.floor(Math.random() * (i + 1));
     var temp = array[i];
@@ -244,7 +244,7 @@ var shuffle = function(array) {
   return array;
 };
 
-var shuffleNowPlaying = function() {
+shuffleNowPlaying = function() {
   var now = NowPlaying.find({});
   var nowArray = [];
   now.forEach(function(track) {
@@ -254,19 +254,19 @@ var shuffleNowPlaying = function() {
   Meteor.call('shufflePlaying', nowArray);
 };
 
-var isPlayer = function() {
+isPlayer = function() {
   console.log(Session.get('client'));
   return Session.get('client') === 'player';
 };
 
-var backSong = function() {
+backSong = function() {
   getAudioElement().currentTime = 0;
   if(Session.equals('playing', false)) {
     getAudioElement().pause();
   }
 };
 
-var checkNextSong = function() {
+checkNextSong = function() {
   if(NowPlaying.find({}).count()) {
     nextSong();
   } else {
@@ -369,12 +369,12 @@ Template.nowPlaying.events({
 });
 
 // ---- Functions for controlling progress bar -------
-var addProgressEventhandler = function() {
+addProgressEventhandler = function() {
   var audio = document.getElementById('audio');
   audio.addEventListener('timeupdate', updateProgress, false);
 };
 
-var updateProgress = function() {
+updateProgress = function() {
   var audio = document.getElementById('audio');
   var value = 0;
   if (audio.currentTime > 0) {
@@ -385,7 +385,7 @@ var updateProgress = function() {
   $('.ui.bottom.attached.green.progress').find('.bar').css('width', value + '%');
 };
 
-var updateBar = function(value) {
+updateBar = function(value) {
   $('.ui.top.attached.green.progress').find('.bar').css('width', value + '%');
   $('.ui.bottom.attached.green.progress').find('.bar').css('width', value + '%');
 };
@@ -395,19 +395,3 @@ controlStream.on('time', function(value) {
 });
 // ---------------------------------------------------------
 
-Template.mobileNowPlaying.helpers({
-
-  songs: function() {
-    return NowPlaying.find({}, {sort: {number: 1}});
-  },
-  currentSong: function() {
-    var song = CurrentSong.findOne();
-    if (!song) {
-      song = {
-        title: '',
-        url: ''
-      };
-    }
-    return song;
-  }
-});
