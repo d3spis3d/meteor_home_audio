@@ -125,16 +125,28 @@ addToNowPlaying = function(songID) {
   NowPlaying.insert(track);
 };
 
+addAlbumToNowPlaying = function() {
+  $('.ui.list').find('.button.Song').each(function() {
+    var id = $(this).data('id');
+    addToNowPlaying(id);
+  });
+};
+
 Template.songs.events({
   'click .button.Song': function(e) {
     var songID = $(e.target).data('id');
     addToNowPlaying(songID);
   },
   'click .button.All': function() {
-    $('.ui.list').find('.button.Song').each(function() {
-      var id = $(this).data('id');
-      console.log(id);
-      addToNowPlaying(id);
+    addAlbumToNowPlaying();
+  },
+  'click .button.PlayAlbum': function() {
+    Meteor.call('clearNowPlaying', function(error, result) {
+      if (error) {
+        console.log(error);
+      } else {
+        addAlbumToNowPlaying();
+      }
     });
   }
 });
@@ -248,7 +260,7 @@ shuffleNowPlaying = function() {
   var now = NowPlaying.find({});
   var nowArray = [];
   now.forEach(function(track) {
-    nowArray.push(track.id);
+    nowArray.push(track._id);
   });
   shuffle(nowArray);
   Meteor.call('shufflePlaying', nowArray);

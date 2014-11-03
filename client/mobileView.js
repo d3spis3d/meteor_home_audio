@@ -25,10 +25,15 @@ Template.mobileSongs.events({
     addToNowPlaying(songID);
   },
   'click .button.All': function() {
-    $('.ui.list').find('.button.Song').each(function() {
-      var id = $(this).data('id');
-      console.log(id);
-      addToNowPlaying(id);
+    addAlbumToNowPlaying();
+  },
+  'click .button.PlayAlbum': function() {
+    Meteor.call('clearNowPlaying', function(error, result) {
+      if (error) {
+        console.log(error);
+      } else {
+        addAlbumToNowPlaying();
+      }
     });
   }
 });

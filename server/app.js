@@ -21,8 +21,15 @@ Meteor.methods({
   shufflePlaying: function(array) {
     var tracks = NowPlaying.find({});
     tracks.forEach(function(track) {
-      var newNumber = array.indexOf(track.id) + 1;
+      var newNumber = array.indexOf(track._id) + 1;
       NowPlaying.update({_id: track._id}, {$set: {number: newNumber}});
+    });
+    return true;
+  },
+  clearNowPlaying: function() {
+    var tracks = NowPlaying.find({});
+    tracks.forEach(function(track) {
+      NowPlaying.remove({_id: track._id});
     });
     return true;
   }
